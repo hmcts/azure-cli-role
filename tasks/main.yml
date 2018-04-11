@@ -1,0 +1,26 @@
+---
+# tasks file for azure-cli-role/
+
+- name: "Install yum deps"
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ azure_cli_role_yum_packages }}"
+
+- include: "prepare-npm.yml"
+
+- include: "npm-dep.yml"
+  loop_control:
+    loop_var: dep_module
+  with_items: "{{ azure_cli_role_npm_packages }}"
+
+- include: "install-v1.yml"
+
+- include: "install-v2.yml"
+
+- name: "Test the CLI runs"
+  command: az
+  changed_when: false
+
+- include: "credentials.yml"
+  when: azure_cli_role_creds_file_content is defined

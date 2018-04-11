@@ -1,0 +1,21 @@
+---
+
+- name: "Check for v1 telemetry file (send info back to MS or not)"
+  command: ls ~/.azure/telemetry.json
+  changed_when: false
+  failed_when: false
+  register: check_v2_telemetry
+  tags:
+    - azure-cli
+
+- name: "Disable v1 telemetry"
+  command: azure telemetry --disable
+  when: check_v2_telemetry.rc != 0
+  tags:
+    - azure-cli
+
+- name: "Check v1 works"
+  command: azure
+  changed_when: false
+  tags:
+    - azure-cli

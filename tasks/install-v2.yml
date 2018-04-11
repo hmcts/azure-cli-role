@@ -1,0 +1,22 @@
+---
+- name: "Check if v2 already installed"
+  command: az
+  failed_when: false
+  changed_when: false
+  register: az_v2_test
+  tags:
+    - azure-cli
+
+- name: "Copy v2 install script"
+  copy:
+    src: "files/install.py"
+    dest: "/tmp/azure_cli_install.py"
+  when: az_v2_test.rc != 0
+  tags:
+    - azure-cli
+
+- name: "Install v2"
+  command: "/bin/python /tmp/azure_cli_install.py"
+  when: az_v2_test.rc != 0
+  tags:
+    - azure-cli

@@ -1,0 +1,32 @@
+---
+# Tasks to work around the issue highlighted in RDO-1301.
+
+- name: Idempotency check http proxy setting for NPM.
+  command: npm config get -g proxy
+  changed_when: false
+  register: test_npm_proxy
+
+- name: Set http proxy for NPM.
+  become: yes
+  command: npm config set -g proxy {{ npm_proxy_url }}
+  when: test_npm_proxy.stdout == "undefined"
+
+- name: Idempotency check https proxy setting for NPM.
+  command: npm config get -g https-proxy
+  changed_when: false
+  register: test_npm_https_proxy
+
+- name: Set https proxy for NPM.
+  become: yes
+  command: npm config set -g https-proxy {{ npm_proxy_url }}
+  when: test_npm_https_proxy.stdout == "undefined"
+
+- name: Idempotency check progress display setting for NPM.
+  command: npm config get -g progress
+  changed_when: false
+  register: test_npm_progress
+
+- name: Turn off progress indicator for NPM to avoid disrupting non-interactive use.
+  become: yes
+  command: npm config set -g progress false
+  when: test_npm_progress.stdout == "true"

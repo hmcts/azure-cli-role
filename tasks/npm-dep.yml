@@ -1,0 +1,12 @@
+---
+# Handle individual npm dep within a loop.
+
+- name: Check if required NPM module is installed.
+  command: "npm list -g {{dep_module}}"
+  ignore_errors: true
+  register: npm_check
+  changed_when: false
+
+- name: Install individual npm dependency if needed.
+  command: "npm install --unsafe-perm -g {{ dep_module }}"
+  when: npm_check.rc == 1
