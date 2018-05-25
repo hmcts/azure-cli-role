@@ -18,5 +18,8 @@
 - name: "Install v2"
   command: "/bin/python /tmp/azure_cli_install.py"
   when: az_v2_test.rc != 0
+  environment:
+    http_proxy: "http://reformmgmtproxyout.reform.hmcts.net:8080/"
+    https_proxy: "http://reformmgmtproxyout.reform.hmcts.net:8080/"
   tags:
     - azure-cli
