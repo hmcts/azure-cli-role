@@ -6,6 +6,9 @@
   changed_when: false
   register: test_npm_proxy
 
+- name: Show result of proxy config check
+  var: test_npm_proxy
+
 - name: Set http proxy for NPM.
   become: yes
   command: npm config set -g proxy {{ npm_proxy_url }}
@@ -15,6 +18,9 @@
   command: npm config get -g https-proxy
   changed_when: false
   register: test_npm_https_proxy
+
+- name: Show result of proxy config check
+  var: test_npm_https_proxy
 
 - name: Set https proxy for NPM.
   become: yes
